@@ -1,0 +1,45 @@
+M557 X48:242 Y48:242 S97
+
+; Probe in the middle first
+G1 X{145 - sensors.probes[0].offsets[0]} Y{145 - sensors.probes[0].offsets[1]} F12000
+G30
+G1 Z{sensors.probes[0].triggerHeight + 3}
+
+; Tell user to lower all points
+M291 P"Lower all probe points slightly and press OK" S3
+
+; First probe point
+G1 X{48 - sensors.probes[0].offsets[0]} Y{48 - sensors.probes[0].offsets[1]} Z{sensors.probes[0].triggerHeight} F12000
+M280 P0 S10
+while sensors.probes[0].value[0] < 500
+  G4 P250
+M280 P0 S90
+G4 S1
+G1 Z{sensors.probes[0].triggerHeight}
+
+; Second probe point
+G1 X{242 - sensors.probes[0].offsets[0]} Z{sensors.probes[0].triggerHeight} F12000
+M280 P0 S10
+while sensors.probes[0].value[0] < 500
+  G4 P250
+M280 P0 S90
+G4 S1
+G1 Z{sensors.probes[0].triggerHeight}
+
+; Third probe point
+G1 Y{242 - sensors.probes[0].offsets[0]} Z{sensors.probes[0].triggerHeight} F12000
+M280 P0 S10
+while sensors.probes[0].value[0] < 500
+  G4 P250
+M280 P0 S90
+G4 S1
+G1 Z{sensors.probes[0].triggerHeight}
+
+; Fourth probe point
+G1 X{48 - sensors.probes[0].offsets[0]} Z{sensors.probes[0].triggerHeight} F12000
+M280 P0 S10
+while sensors.probes[0].value[0] < 500
+  G4 P250
+M280 P0 S90
+G4 S1
+G1 Z{sensors.probes[0].triggerHeight}

@@ -1,0 +1,8 @@
+var servoOffset = 75  ; servo value at which the LED strip is straight
+var servoAngle = 20   ; desired angle in deg
+var ledHeight = 70    ; height of the LED strip
+var ledDistance = 180 ; distance of the LED strip from the center of the bed
+if move.axes[2].homed && move.axes[2].userPosition != -var.ledHeight
+    var requestedAngle = 90 - atan(var.ledDistance / (move.axes[2].userPosition + var.ledHeight)) * 180
+    set var.servoAngle = var.servoOffset + min(max(var.requestedAngle, 0), 90)
+M280 P1 S{var.servoAngle}
