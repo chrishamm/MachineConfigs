@@ -40,14 +40,12 @@ M201 X12000 Y12000 Z60                                            ; set accelera
 ; Extruders
 M584 E0.3                                                         ; set extruder mapping
 M350 E16 I1                                                       ; configure microstepping with interpolation
-if false                                                          ; set to true to use stock extruder, Titan otherwise
-else
-  M906 E1350                                                      ; set extruder driver currents
-  M92 E837                                                        ; configure steps per mm
-  M566 E1200                                                      ; set maximum instantaneous speed changes (mm/min)
-  M203 E6000                                                      ; set maximum speeds (mm/min)
-  M201 E6000                                                      ; set accelerations (mm/s^2)
-  M915 E0 S1                                                      ; set StallGuard threshold
+M906 E1350                                                        ; set extruder driver currents
+M92 E837                                                          ; configure steps per mm
+M566 E1200                                                        ; set maximum instantaneous speed changes (mm/min)
+M203 E6000                                                        ; set maximum speeds (mm/min)
+M201 E6000                                                        ; set accelerations (mm/s^2)
+M915 E0 S1                                                        ; set StallGuard threshold
 
 ; Kinematics and Input Shaping
 M669 K1                                                           ; configure CoreXY kinematics
@@ -93,12 +91,10 @@ M308 S3 P"io6.out" Y"dht22" A"Chamber Temp"
 M308 S4 P"S3.1" Y"dht-humidity" A"Chamber RH[%]"
 
 ; Fans
-M950 F0 C"1.out6"                                                 ; create fan #0
-M106 P0 S0 H1 L1 X1 T60 B0                                        ; configure fan #0
-M950 F1 C"1.out7"                                                 ; create fan #1
-M106 P1 S0 L0 X1 B0.1                                             ; configure fan #1
-M950 F2 C"!1.out3+out3.tach" Q25000                               ; create fan #2
-M106 P2 S0 L0 X1                                                  ; configure fan #2
+M950 F0 C"!1.out3+out3.tach" Q25000                               ; create fan #0
+M106 P0 S0 L0.21 X1 B0 H1 T60:250                                 ; configure fan #0
+M950 F1 C"1.out6"                                                 ; create fan #1
+M106 P1 S0 L0 X1 B0.1 C"Cooling Fan"                              ; configure fan #1
 
 ; Tools
 M98 P"revo/config.g" D0 H1 F1
@@ -111,8 +107,6 @@ M703                                                              ; configure fi
 ; Configure buzzer
 M300 C"io5.out"
 
-; TODO move io7 to io8 and use io7 for LED servo
-
 ; Triggers
 M950 J0 C"!io8.in"                                                ; configure gpIn #0
 M581 P0 S1 T2 R0                                                  ; configure trigger #2 for gpIn #0
@@ -122,6 +116,8 @@ M950 S1 C"io7.out"
 
 ; LED
 M950 E0 C"led" T0 U36
+M950 E1 C"1.io0.out" T1 U67 
+M950 E2 C"1.io1.out" T1 U67
 
 ; Allow cold extrusion
 M302 P1

@@ -81,7 +81,7 @@ M143 H0 P0 T0 C0 S140 A0                                          ; configure he
 M307 H0 R0.182 K0.161:0.000 D4.93 E1.35 S1.00 B0                  ; configure model of heater #0
 M950 H1 C"1.out0" T1                                              ; create heater #1
 M143 H1 P0 T1 C0 S285 A0                                          ; configure heater monitor #0 for heater #1
-M307 H1 R3.874 K0.639:0.052 D1.79 E1.35 S1.00 B0                  ; configure model of heater #1
+M307 H1 R4.567 K0.694:0.135 D2.00 E1.35 S1.00 B0                  ; configure model of heater #1
 
 ; Heated bed
 M140 P0 H0                                                        ; configure heated bed #0
@@ -91,12 +91,10 @@ M308 S3 P"io6.out" Y"dht22" A"Chamber Temp"
 M308 S4 P"S3.1" Y"dht-humidity" A"Chamber RH[%]"
 
 ; Fans
-M950 F0 C"1.out6"                                                 ; create fan #0
-M106 P0 S0 H1 L1 X1 T60 B0                                        ; configure fan #0
-M950 F1 C"1.out7"                                                 ; create fan #1
-M106 P1 S0 L0 X1 B0.1                                             ; configure fan #1
-M950 F2 C"!1.out3+out3.tach" Q25000                               ; create fan #2
-M106 P2 S0 L0 X1                                                  ; configure fan #2
+M950 F0 C"!1.out3+out3.tach" Q25000                               ; create fan #0
+M106 P0 S0 L0.21 X1 B0 H1 T60:250                                 ; configure fan #0
+M950 F1 C"1.out6"                                                 ; create fan #1
+M106 P1 S0 L0 X1 B0.1 C"Cooling Fan"                              ; configure fan #1
 
 ; Tools
 M98 P"revo/config.g" D0 H1 F1
@@ -109,8 +107,6 @@ M703                                                              ; configure fi
 ; Configure buzzer
 M300 C"io5.out"
 
-; TODO move io7 to io8 and use io7 for LED servo
-
 ; Triggers
 M950 J0 C"!io8.in"                                                ; configure gpIn #0
 M581 P0 S1 T2 R0                                                  ; configure trigger #2 for gpIn #0
@@ -120,6 +116,8 @@ M950 S1 C"io7.out"
 
 ; LED
 M950 E0 C"led" T0 U36
+M950 E1 C"1.io0.out" T1 U67 
+M950 E2 C"1.io1.out" T1 U67
 
 ; Allow cold extrusion
 M302 P1
