@@ -36,6 +36,9 @@ M208 X9:277 Y2:306 Z0:400                                         ; set minimum 
 M566 X1800 Y1800 Z120 P1                                          ; set maximum instantaneous speed changes (mm/min)
 M203 X90000 Y90000 Z1200                                          ; set maximum speeds (mm/min)
 M201 X12000 Y12000 Z60                                            ; set accelerations (mm/s^2)
+;M566 X600 Y600 Z120 P1                                            ; set maximum instantaneous speed changes (mm/min)
+;M203 X30000 Y30000 Z1200                                          ; set maximum speeds (mm/min)
+;M201 X4000 Y4000 Z60                                              ; set accelerations (mm/s^2)
 
 ; Extruders
 M584 E0.3                                                         ; set extruder mapping
@@ -81,7 +84,7 @@ M143 H0 P0 T0 C0 S140 A0                                          ; configure he
 M307 H0 R0.182 K0.161:0.000 D4.93 E1.35 S1.00 B0                  ; configure model of heater #0
 M950 H1 C"1.out0" T1                                              ; create heater #1
 M143 H1 P0 T1 C0 S285 A0                                          ; configure heater monitor #0 for heater #1
-M307 H1 R3.874 K0.639:0.052 D1.79 E1.35 S1.00 B0                  ; configure model of heater #1
+M307 H1 R4.567 K0.694:0.135 D2.00 E1.35 S1.00 B0                  ; configure model of heater #1
 
 ; Heated bed
 M140 P0 H0                                                        ; configure heated bed #0

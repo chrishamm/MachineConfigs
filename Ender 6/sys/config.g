@@ -36,6 +36,9 @@ M208 X9:277 Y2:306 Z0:400                                         ; set minimum 
 M566 X1800 Y1800 Z120 P1                                          ; set maximum instantaneous speed changes (mm/min)
 M203 X90000 Y90000 Z1200                                          ; set maximum speeds (mm/min)
 M201 X12000 Y12000 Z60                                            ; set accelerations (mm/s^2)
+;M566 X600 Y600 Z120 P1                                            ; set maximum instantaneous speed changes (mm/min)
+;M203 X30000 Y30000 Z1200                                          ; set maximum speeds (mm/min)
+;M201 X4000 Y4000 Z60                                              ; set accelerations (mm/s^2)
 
 ; Extruders
 M584 E0.3                                                         ; set extruder mapping
@@ -61,7 +64,7 @@ M280 P0 S90                                                       ; ensure the p
 
 M558 K1 P11 C"120.i2c.ldc1612" F12000 T36000                      ; configure SZP as probe 1, type 11, on CAN address 120
 G31 K1 X-21 Y-8 Z0.5                                              ; define probe 1 offsets and trigger height
-M558.2 K1 S15 R103360                                             ; set drive current and reading offset
+M558.2 K1 S16 R102159                                             ; set drive current and reading offset
 
 M376 H10                                                          ; taper off at 10mm
 

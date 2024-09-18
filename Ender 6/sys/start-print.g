@@ -12,10 +12,10 @@ G10 P0 S{param.T}
 M703
 
 ; home all axes or calibrate bed
-;if move.compensation.type != "none"
+if move.compensation.type != "none"
   G28
-;else
-;  G32
+else
+  G32
 
 ; wait for temps and then prime the nozzle
 M116
