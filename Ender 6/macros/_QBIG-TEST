@@ -1,0 +1,3 @@
+;customInfo description="Hello this is my description from a macro file"
+M300
+G4 S4

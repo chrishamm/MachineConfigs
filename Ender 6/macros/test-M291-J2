@@ -1,0 +1,6 @@
+M291 P"Test" R"Test" S4 K{"Test1","Test2"}
+echo "Result: " ^ result ^ " Input: " ^ input
+M291 P"Test" R"Test" S4 K{"Test1","Test2"} J1
+echo "Result: " ^ result ^ " Input: " ^ input
+M291 P"Test" R"Test" S4 K{"Test1","Test2"} J2
+echo "Result: " ^ result ^ " Input: " ^ input

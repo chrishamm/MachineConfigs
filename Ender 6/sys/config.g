@@ -45,18 +45,18 @@ M584 E0.3                                                         ; set extruder
 M350 E16 I1                                                       ; configure microstepping with interpolation
 M906 E1350                                                        ; set extruder driver currents
 M92 E837                                                          ; configure steps per mm
-M566 E1200                                                        ; set maximum instantaneous speed changes (mm/min)
+M566 E1150                                                        ; set maximum instantaneous speed changes (mm/min)
 M203 E6000                                                        ; set maximum speeds (mm/min)
 M201 E6000                                                        ; set accelerations (mm/s^2)
 M915 E0 S1                                                        ; set StallGuard threshold
 
 ; Kinematics and Input Shaping
 M669 K1                                                           ; configure CoreXY kinematics
-M593 P"zvdd" F58                                                  ; configure input shaping
+M593 P"zvdd" F59                                                  ; configure input shaping
 
 ; Probes
 M558 K0 P9 C"io4.in" H5 F600:120 T12000                           ; configure BLTouch probe via slot #0
-G31 P500 X-21 Y-8 Z4.05                                           ; set Z probe trigger value, offset and trigger height
+G31 P500 X-21 Y-8 Z4.20                                           ; set Z probe trigger value, offset and trigger height
 M950 S0 C"io4.out"                                                ; create servo #0 for BLtouch
 M280 P0 S160                                                      ; precautionary alarm release
 G4 P250
@@ -64,9 +64,9 @@ M280 P0 S90                                                       ; ensure the p
 
 M558 K1 P11 C"120.i2c.ldc1612" F12000 T36000                      ; configure SZP as probe 1, type 11, on CAN address 120
 G31 K1 X-21 Y-8 Z0.5                                              ; define probe 1 offsets and trigger height
-M558.2 K1 S16 R102159                                             ; set drive current and reading offset
+M558.2 K1 S16 R103896                                             ; set drive current and reading offset
 
-M376 H10                                                          ; taper off at 10mm
+M376 H3                                                           ; taper off at 3mm
 
 ; Endstops
 M574 X2 P"io1.in" S1                                              ; configure X axis endstop

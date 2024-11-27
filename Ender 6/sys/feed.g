@@ -11,8 +11,9 @@ if global.filamentType != "TPU"
   M572 D0 S0
 
   ; feed filament to the nozzle until SG detection triggers
-  M913 E40
-  G1 H1 E100 F3000
+  M913 E30
+  G1 E1 F3000
+  G1 H1 E100
   M913 E100
 
   ; start extruding to get the nozzle flowing
