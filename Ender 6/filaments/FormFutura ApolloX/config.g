@@ -1,3 +1,5 @@
+M98 P"extruder-defaults.g"
+
 set global.filamentType = "ApolloX"
 M221 D0 S97
 

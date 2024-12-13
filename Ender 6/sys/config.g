@@ -45,10 +45,8 @@ M584 E0.3                                                         ; set extruder
 M350 E16 I1                                                       ; configure microstepping with interpolation
 M906 E1350                                                        ; set extruder driver currents
 M92 E837                                                          ; configure steps per mm
-M566 E1150                                                        ; set maximum instantaneous speed changes (mm/min)
-M203 E6000                                                        ; set maximum speeds (mm/min)
-M201 E6000                                                        ; set accelerations (mm/s^2)
 M915 E0 S1                                                        ; set StallGuard threshold
+M98 P"extruder-defaults.g"
 
 ; Kinematics and Input Shaping
 M669 K1                                                           ; configure CoreXY kinematics

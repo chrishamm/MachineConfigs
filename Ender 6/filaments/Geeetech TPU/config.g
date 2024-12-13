@@ -1,3 +1,5 @@
+M98 P"extruder-tpu.g"
+
 set global.filamentType = "TPU"
 M221 D0 S89
 

@@ -45,7 +45,7 @@ M584 E0.3                                                         ; set extruder
 M350 E16 I1                                                       ; configure microstepping with interpolation
 M906 E1350                                                        ; set extruder driver currents
 M92 E837                                                          ; configure steps per mm
-M566 E1150                                                        ; set maximum instantaneous speed changes (mm/min)
+M566 E900                                                         ; set maximum instantaneous speed changes (mm/min)
 M203 E6000                                                        ; set maximum speeds (mm/min)
 M201 E6000                                                        ; set accelerations (mm/s^2)
 M915 E0 S1                                                        ; set StallGuard threshold
@@ -63,8 +63,8 @@ G4 P250
 M280 P0 S90                                                       ; ensure the pin is raised
 
 M558 K1 P11 C"120.i2c.ldc1612" F12000 T36000                      ; configure SZP as probe 1, type 11, on CAN address 120
-G31 K1 X-21 Y-8 Z0.2                                              ; define probe 1 offsets and trigger height
-M558.2 K1 S16 R102159                                             ; set drive current and reading offset
+G31 K1 X-21 Y-8 Z0.5                                              ; define probe 1 offsets and trigger height
+M558.2 K1 S16 R103896                                             ; set drive current and reading offset
 
 M376 H3                                                           ; taper off at 3mm
 

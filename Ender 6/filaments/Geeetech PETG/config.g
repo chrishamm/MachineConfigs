@@ -1,3 +1,5 @@
+M98 P"extruder-defaults.g"
+
 set global.filamentType = "PETG"
 M221 D0 S95
 
