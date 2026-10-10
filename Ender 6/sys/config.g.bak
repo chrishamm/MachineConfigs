@@ -9,19 +9,23 @@ M83                                                               ; relative ext
 M550 P"Ender 6"                                                   ; set hostname
 
 ; Accessories
-M575 P1 S0 B57600                                                 ; configure PanelDue support
+M575 P2 S0 B57600                                                 ; configure PanelDue support (P1 is AUX in 3.6, P2 is AUX in 3.7)
 
 ; Wait a moment for the CAN expansion boards to become available
 G4 S2
 
 ; Accelerometers
-M955 P120.0 I20                                                   ; configure accelerometer on board #120
+M955 P0 C"120.i2c.lis" I25                                        ; configure accelerometer on board #120
 
 ; Smart Drivers
 M569 P0.0 S1 D2                                                   ; driver 0.0 goes forwards (Y axis)
 M569 P0.1 S0 D2                                                   ; driver 0.1 goes backwards (X axis)
 M569 P0.2 S1 D2                                                   ; driver 0.2 goes forwards (Z axis)
-M569 P0.3 S1 D2                                                   ; driver 0.3 goes forwards (extruder 0)
+M569 P1.0 S1 D2                                                   ; driver 1.0 goes forwards (extruder 0)
+
+; Motor waveform correction
+M569.2 P0.1 S4 J1.71 O180.0
+M569.2 P0.0 S4 J2.01 O180.0
 
 ; Motor Idle Current Reduction
 M906 I30                                                          ; set motor current idle factor
@@ -30,41 +34,39 @@ M84 S30                                                           ; set motor cu
 ; Axes
 M584 X0.1 Y0.0 Z0.2                                               ; set axis mapping
 M350 X16 Y16 Z16 I1                                               ; configure microstepping with interpolation
-M906 X1000 Y1000 Z800                                             ; set axis driver currents
+M906 X1100 Y1100 Z700                                             ; set axis driver currents
 M92 X80 Y80 Z400                                                  ; configure steps per mm
 M208 X9:277 Y2:306 Z0:400                                         ; set minimum and maximum axis limits
-M566 X1800 Y1800 Z120 P1                                          ; set maximum instantaneous speed changes (mm/min)
+M566 X1200 Y1200 Z120 P1                                          ; set maximum instantaneous speed changes (mm/min)
 M203 X90000 Y90000 Z1200                                          ; set maximum speeds (mm/min)
-M201 X12000 Y12000 Z60                                            ; set accelerations (mm/s^2)
-;M566 X600 Y600 Z120 P1                                            ; set maximum instantaneous speed changes (mm/min)
-;M203 X30000 Y30000 Z1200                                          ; set maximum speeds (mm/min)
-;M201 X4000 Y4000 Z60                                              ; set accelerations (mm/s^2)
+M201 X12000 Y12000 Z120                                           ; set accelerations (mm/s^2)
 
 ; Extruders
-M584 E0.3                                                         ; set extruder mapping
+M584 E1.0                                                         ; set extruder mapping
 M350 E16 I1                                                       ; configure microstepping with interpolation
-M906 E1350                                                        ; set extruder driver currents
-M92 E837                                                          ; configure steps per mm
-M566 E900                                                         ; set maximum instantaneous speed changes (mm/min)
-M203 E6000                                                        ; set maximum speeds (mm/min)
-M201 E6000                                                        ; set accelerations (mm/s^2)
-M915 E0 S1                                                        ; set StallGuard threshold
+M906 E750                                                         ; set extruder driver currents
+M92 E400                                                          ; configure steps per mm (default 140)
+M915 E0 S5                                                        ; set StallGuard threshold
+M98 P"extruder.g" D0.6
+
+; Filament Monitor
+M591 D0 P3 C"1.io2.in" R30:150 S0
 
 ; Kinematics and Input Shaping
 M669 K1                                                           ; configure CoreXY kinematics
-M593 P"zvdd" F59                                                  ; configure input shaping
+M593 P"zvdd" F97.6 S0.11 ; configure input shaping
 
 ; Probes
 M558 K0 P9 C"io4.in" H5 F600:120 T12000                           ; configure BLTouch probe via slot #0
-G31 P500 X-21 Y-8 Z4.20                                           ; set Z probe trigger value, offset and trigger height
+G31 P500 X-21 Y-8 Z3.25                                           ; set Z probe trigger value, offset and trigger height
 M950 S0 C"io4.out"                                                ; create servo #0 for BLtouch
 M280 P0 S160                                                      ; precautionary alarm release
 G4 P250
 M280 P0 S90                                                       ; ensure the pin is raised
 
-M558 K1 P11 C"120.i2c.ldc1612" F12000 T36000                      ; configure SZP as probe 1, type 11, on CAN address 120
-G31 K1 X-21 Y-8 Z0.5                                              ; define probe 1 offsets and trigger height
-M558.2 K1 S16 R103896                                             ; set drive current and reading offset
+M558 K1 P11 C"120.i2c.ldc1612" F6000 T12000                      ; configure SZP as probe 1, type 11, on CAN address 120
+G31 K1 X-21 Y-8 Z1                                                ; define probe 1 offsets and trigger height
+M558.2 K1 S16 R103558                                             ; set drive current and reading offset
 
 M376 H3                                                           ; taper off at 3mm
 
@@ -76,7 +78,7 @@ M574 Z1 P"io3.in" S1                                              ; configure Z 
 ; Sensors
 M308 S0 P"temp0" Y"thermistor" A"Heated Bed" T100000 B4092        ; configure sensor #0
 M308 S1 P"1.temp0" Y"thermistor" A"Nozzle" T100000 B4388 C7.06e-8 ; configure sensor #1
-M308 A"SZP coil" S2 Y"thermistor" P"120.temp0"                    ; thermistor on SZP coil
+;M308 A"SZP coil" S2 Y"thermistor" P"120.temp0"                    ; thermistor on SZP coil (broken!)
 
 ; Heaters
 M950 H0 C"out0" T0                                                ; create heater #0
@@ -84,7 +86,9 @@ M143 H0 P0 T0 C0 S140 A0                                          ; configure he
 M307 H0 R0.182 K0.161:0.000 D4.93 E1.35 S1.00 B0                  ; configure model of heater #0
 M950 H1 C"1.out0" T1                                              ; create heater #1
 M143 H1 P0 T1 C0 S285 A0                                          ; configure heater monitor #0 for heater #1
-M307 H1 R4.567 K0.694:0.135 D2.00 E1.35 S1.00 B0                  ; configure model of heater #1
+;M307 H1 R4.567 K0.694:0.135 D2.00 E1.35 S1.00 B0                  ; configure model of heater #1
+;M307 H1 R4.484 K0.783:0.031 D2.09 E1.35 S1.00 B0 ; F0.7
+M307 H1 R4.510 K0.687:0.071 D2.14 E1.35 S1.00 B0 V24.1
 
 ; Heated bed
 M140 P0 H0                                                        ; configure heated bed #0
@@ -121,6 +125,9 @@ M950 S1 C"io7.out"
 M950 E0 C"led" T0 U36
 M950 E1 C"1.io0.out" T1 U67 
 M950 E2 C"1.io1.out" T1 U67
+
+; Configure power loss
+M911 S46 R47 P"M913 X0 Y0 G91 M83 G1 Z3 E-5 F1000"
 
 ; Allow cold extrusion
 M302 P1

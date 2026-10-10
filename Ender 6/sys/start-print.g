@@ -20,3 +20,4 @@ else
 ; wait for temps and then prime the nozzle
 M116
 M98 P"feed.g"
+set global.ledJobState = "printing"

@@ -1,1 +1,0 @@
-echo "Load it manually"

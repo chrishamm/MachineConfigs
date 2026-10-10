@@ -1,4 +1,4 @@
-G1 X145 Y305 F12000 ; move the head out of the way
+G1 X270 Y300 F12000 ; move the head out of the way
 if global.filamentType == "TPU"
   G10               ; do only firmware retraction for TPU
 else
@@ -8,5 +8,4 @@ M140 S0             ; turn off bed
 G10 P0 S0 R0        ; turn off nozzle
 M106 S0
 G1 Z400             ; move bed down
-M84
-;M150 P0 S72
+set global.ledJobState = "finished"

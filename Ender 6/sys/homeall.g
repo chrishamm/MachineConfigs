@@ -8,10 +8,15 @@ G91 ; relative positioning
 G1 H2 Z5 F6000 ; move Z relative to current position to avoid dragging nozzle over the bed
 G90 ; absolute positioning
 
-; home XY
-var xTravel = move.axes[0].max - move.axes[0].min + 5 ; calculate how far X can travel plus 5mm
-var yTravel = move.axes[1].max - move.axes[1].min + 5 ; calculate how far Y can travel plus 5mm
+; see how far we can home
+var xTravel = move.axes[0].max - move.axes[0].min + 5
+var yTravel = move.axes[1].max - move.axes[1].min + 5
+
+; move X towards end before attempting anything else
 G91 ; relative positioning
+G1 H1 X{var.xTravel/4} F1200 ; coarse home
+
+; home XY
 G1 H1 X{var.xTravel} Y{var.yTravel} F1200 ; coarse home
 G1 H1 X{var.xTravel} F1200 ; coarse home in the +X direction
 G1 H1 Y{var.yTravel} F1200 ; coarse home in the +Y direction
@@ -26,5 +31,7 @@ G1 X166 Y153 F12000
 G30
 ;G1 X145 Y145 F12000
 
-; lower Z
-;G1 Z5 F6000
+; increase Z
+;G91 ; relative positioning
+;G1 Z5 F6000 ; move Z relative to current position to avoid dragging nozzle over the bed
+;G90 ; absolute positioning
