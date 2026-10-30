@@ -1,5 +1,5 @@
 set global.filamentType = "TPU"
-M98 P"extruder.g" D{global.nozzleDiameter}
+M98 P"extruder.g"
 
 M221 D0 S96
 

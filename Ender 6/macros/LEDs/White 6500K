@@ -1,2 +1,0 @@
-set global.ledWhite = {255,249,253}
-M98 P"/sys/led-apply.g"

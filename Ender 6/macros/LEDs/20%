@@ -1,2 +1,0 @@
-set global.ledBrightness = 51
-M98 P"/sys/led-apply.g"

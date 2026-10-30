@@ -14,12 +14,12 @@ var yTravel = move.axes[1].max - move.axes[1].min + 5
 
 ; move X towards end before attempting anything else
 G91 ; relative positioning
-G1 H1 X{var.xTravel/4} F1200 ; coarse home
+G1 H1 X{var.xTravel/2} F1500 ; coarse home
 
 ; home XY
-G1 H1 X{var.xTravel} Y{var.yTravel} F1200 ; coarse home
-G1 H1 X{var.xTravel} F1200 ; coarse home in the +X direction
-G1 H1 Y{var.yTravel} F1200 ; coarse home in the +Y direction
+G1 H1 X{var.xTravel} Y{var.yTravel} F1500 ; coarse home
+G1 H1 X{var.xTravel} F1500 ; coarse home in the +X direction
+G1 H1 Y{var.yTravel} F1500 ; coarse home in the +Y direction
 G1 X-5 Y-5 F6000 ; move back 5mm
 G1 H1 X{var.xTravel} Y{var.yTravel} F600 ; fine home
 G1 H1 X{var.xTravel} F600 ; fine home in the +X direction

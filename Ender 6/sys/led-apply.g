@@ -1,4 +1,4 @@
-; Writes all three LED strips: colour from the machine state, column window from the bed position
+; Writes all three LED strips: colour from a manual override or the machine state, column window from the bed position
 ; Call with Z<position> to use a given bed position instead of the live one
 
 var ledCount = 67      ; LEDs per column strip, controlled bottom to top
@@ -12,7 +12,7 @@ var fadeSeconds = 900  ; time from reaching ambient to the strips going dark
 var red = global.ledWhite[0]
 var green = global.ledWhite[1]
 var blue = global.ledWhite[2]
-var brightness = global.ledBrightness
+var fade = 1
 var ramp = -1
 if state.status = "paused" || state.status = "pausing"
     set var.red = 255
@@ -24,10 +24,16 @@ elif global.ledJobState = "cancelled"
     set var.blue = 0
 elif global.ledJobState = "finished"
     set var.ramp = min(max((heat.heaters[heat.bedHeaterMapping[0][0]].current - var.ambient) / var.colourSpan, 0), 1) * 3
-    if var.ramp = 0 && global.ledAmbientSince < 0
+    if var.ramp < 0.1 && global.ledAmbientSince < 0
         set global.ledAmbientSince = state.upTime
     if global.ledAmbientSince >= 0
-        set var.brightness = round(global.ledBrightness * max(1 - (state.upTime - global.ledAmbientSince) / var.fadeSeconds, 0))
+        set var.fade = max(1 - (state.upTime - global.ledAmbientSince) / var.fadeSeconds, 0)
+        ; a finished fade hands over to idle, else it would keep the brightness pinned at zero
+        if var.fade <= 0
+            set global.ledJobState = ""
+            set global.ledAmbientSince = -1
+            set global.ledTopBrightness = 0
+            set global.ledColumnBrightness = 0
 elif global.ledJobState != "printing"
     var progress = 1
     var heating = false
@@ -53,17 +59,35 @@ if var.ramp >= 0
         set var.green = round(255 * var.ramp)
         set var.blue = round(255 * (1 - var.ramp))
 
+; the manual colours are packed into one value each, because an array written from another channel can be read half-updated
+var manualTop = global.ledTopColour
+var manualColumn = global.ledColumnColour
+var topRed = (var.manualTop < 0) ? var.red : floor(var.manualTop / 65536)
+var topGreen = (var.manualTop < 0) ? var.green : floor(mod(var.manualTop, 65536) / 256)
+var topBlue = (var.manualTop < 0) ? var.blue : floor(mod(var.manualTop, 256))
+var columnRed = (var.manualColumn < 0) ? var.red : floor(var.manualColumn / 65536)
+var columnGreen = (var.manualColumn < 0) ? var.green : floor(mod(var.manualColumn, 65536) / 256)
+var columnBlue = (var.manualColumn < 0) ? var.blue : floor(mod(var.manualColumn, 256))
+var topBrightness = round(global.ledTopBrightness * var.fade)
+var columnBrightness = round(global.ledColumnBrightness * var.fade)
+
 var bedZ = exists(param.Z) ? param.Z : move.axes[2].machinePosition
 var firstLed = var.firstLedAtZ0 - (var.firstLedAtZ0 - var.firstLedAtZMax) * var.bedZ / move.axes[2].max
-var litCount = min(max(var.ledCount - round(var.firstLed) + 1, 0), var.ledCount)
-var colour = var.red * 65536 + var.green * 256 + var.blue
-if var.brightness != global.ledAppliedBrightness || var.bedZ != global.ledAppliedZ || var.colour != global.ledAppliedColour
-    M150 E0 R{var.red} U{var.green} B{var.blue} P{var.brightness} S{var.topLedCount}
+; an unhomed bed can be anywhere, so light the whole column instead of guessing a window
+var litCount = move.axes[2].homed ? min(max(var.ledCount - round(var.firstLed) + 1, 0), var.ledCount) : var.ledCount
+
+var topColour = var.topRed * 65536 + var.topGreen * 256 + var.topBlue
+if var.topColour != global.ledAppliedTopColour || var.topBrightness != global.ledAppliedTopBrightness
+    M150 E0 R{var.topRed} U{var.topGreen} B{var.topBlue} P{var.topBrightness} S{var.topLedCount}
+    set global.ledAppliedTopColour = var.topColour
+    set global.ledAppliedTopBrightness = var.topBrightness
+
+var columnColour = var.columnRed * 65536 + var.columnGreen * 256 + var.columnBlue
+if var.columnColour != global.ledAppliedColumnColour || var.columnBrightness != global.ledAppliedColumnBrightness || var.litCount != global.ledAppliedColumnCount
     M150 E1 P0 S{var.ledCount - var.litCount} F1
-    M150 E1 R{var.red} U{var.green} B{var.blue} P{var.brightness} S{var.litCount}
+    M150 E1 R{var.columnRed} U{var.columnGreen} B{var.columnBlue} P{var.columnBrightness} S{var.litCount}
     M150 E2 P0 S{var.ledCount - var.litCount} F1
-    M150 E2 R{var.red} U{var.green} B{var.blue} P{var.brightness} S{var.litCount}
-    set global.ledAppliedBrightness = var.brightness
-    set global.ledAppliedZ = var.bedZ
-    set global.ledAppliedColour = var.colour
-    set global.ledAppliedCount = var.litCount
+    M150 E2 R{var.columnRed} U{var.columnGreen} B{var.columnBlue} P{var.columnBrightness} S{var.litCount}
+    set global.ledAppliedColumnColour = var.columnColour
+    set global.ledAppliedColumnBrightness = var.columnBrightness
+    set global.ledAppliedColumnCount = var.litCount

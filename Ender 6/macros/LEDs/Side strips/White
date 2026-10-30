@@ -1,0 +1,1 @@
+M98 P"/sys/led-set.g" T2 R{global.ledWhite[0]} U{global.ledWhite[1]} B{global.ledWhite[2]}

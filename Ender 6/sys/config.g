@@ -36,8 +36,8 @@ M584 X0.1 Y0.0 Z0.2                                               ; set axis map
 M350 X16 Y16 Z16 I1                                               ; configure microstepping with interpolation
 M906 X1100 Y1100 Z700                                             ; set axis driver currents
 M92 X80 Y80 Z400                                                  ; configure steps per mm
-M208 X9:277 Y2:306 Z0:400                                         ; set minimum and maximum axis limits
-M566 X1200 Y1200 Z120 P1                                          ; set maximum instantaneous speed changes (mm/min)
+M208 X10:280 Y2:306 Z0:400                                        ; set minimum and maximum axis limits
+M566 X1800 Y1800 Z120 P1                                          ; set maximum instantaneous speed changes (mm/min)
 M203 X60000 Y60000 Z1200                                          ; set maximum speeds (mm/min)
 M201 X12000 Y12000 Z120                                           ; set accelerations (mm/s^2)
 
@@ -47,10 +47,9 @@ M350 E16 I1                                                       ; configure mi
 M906 E750                                                         ; set extruder driver currents
 M92 E400                                                          ; configure steps per mm (default 140)
 M915 E0 S5                                                        ; set StallGuard threshold
-M98 P"extruder.g" D0.6
 
 ; Filament Monitor
-M591 D0 P3 C"1.io2.in" R30:150 S0
+M591 D0 P3 C"1.io2.in" R30:160 S0
 
 ; Kinematics and Input Shaping
 M669 K1                                                           ; configure CoreXY kinematics
@@ -86,9 +85,8 @@ M143 H0 P0 T0 C0 S140 A0                                          ; configure he
 M307 H0 R0.182 K0.161:0.000 D4.93 E1.35 S1.00 B0                  ; configure model of heater #0
 M950 H1 C"1.out0" T1                                              ; create heater #1
 M143 H1 P0 T1 C0 S285 A0                                          ; configure heater monitor #0 for heater #1
-;M307 H1 R4.567 K0.694:0.135 D2.00 E1.35 S1.00 B0                  ; configure model of heater #1
-;M307 H1 R4.484 K0.783:0.031 D2.09 E1.35 S1.00 B0 ; F0.7
-M307 H1 R4.510 K0.687:0.071 D2.14 E1.35 S1.00 B0 V24.1
+;M307 H1 R4.510 K0.687:0.071 D2.14 E1.35 S1.00 B0 V24.1            ; 40W
+M307 H1 R4.966 K0.585:0.000 D2.61 E1.35 S1.00 B0 V24.0            ; 60W
 
 ; Heated bed
 M140 P0 H0                                                        ; configure heated bed #0
@@ -105,6 +103,7 @@ M106 P1 S0 L0 X1 B0.1 C"Cooling Fan"                              ; configure fa
 
 ; Tools
 M98 P"revo/config.g" D0 H1 F1
+M98 P"extruder.g"                                                 ; needs the nozzle globals from revo/config.g
 
 ; Apply filament config
 global filamentType = ""
@@ -126,20 +125,25 @@ M950 E0 C"led" T0 U36
 M950 E1 C"1.io0.out" T1 U67
 M950 E2 C"1.io1.out" T1 U67
 
-; LED state, applied by daemon.g through led-apply.g
-global ledBrightness = 0 ; configured brightness, 0-255
-global ledJobState = ""  ; "starting", "printing", "cancelled" or "finished"
-global ledAmbientSince = -1 ; uptime at which a finished job cooled to ambient, -1 until then
+; LED state, set through led-set.g and applied by daemon.g through led-apply.g
+global ledTopBrightness = 0    ; configured brightness of the top strip, 0-255
+global ledColumnBrightness = 0 ; configured brightness of the two column strips, 0-255
+global ledJobState = ""        ; "starting", "printing", "cancelled" or "finished"
+global ledAmbientSince = -1    ; uptime at which a finished job cooled to ambient, -1 until then
 
 ; white point for the strips, about 3000K
 global ledWhite = {255,180,107}
 
-; last written state; a repaint needs one of these three to change
-global ledAppliedBrightness = -1
-global ledAppliedZ = -1
-global ledAppliedColour = -1
+; manual colour packed as red * 65536 + green * 256 + blue, -1 while the strip follows the machine state
+global ledTopColour = -1
+global ledColumnColour = -1
 
-global ledAppliedCount = -1 ; lit column LEDs as last written, reported for diagnostics only
+; last written state; a repaint needs one of these to change
+global ledAppliedTopColour = -1
+global ledAppliedTopBrightness = -1
+global ledAppliedColumnColour = -1
+global ledAppliedColumnBrightness = -1
+global ledAppliedColumnCount = -1
 
 ; Configure power loss
 M911 S46 R47 P"M913 X0 Y0 G91 M83 G1 Z3 E-5 F1000"

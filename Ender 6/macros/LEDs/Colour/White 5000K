@@ -1,0 +1,2 @@
+set global.ledWhite = {255,228,206}
+M98 P"/sys/led-set.g" R{global.ledWhite[0]} U{global.ledWhite[1]} B{global.ledWhite[2]}

@@ -1,2 +1,1 @@
-set global.ledBrightness = 0
-M98 P"/sys/led-apply.g"
+M98 P"/sys/led-set.g" S0

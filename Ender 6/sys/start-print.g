@@ -1,3 +1,6 @@
+; this macro can be interrupted
+M98 R1
+
 ; check preconditions
 M98 P"check-filament.g" F{param.F}
 M98 P"revo/check-nozzle.g" S{param.S}
