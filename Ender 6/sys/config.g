@@ -84,7 +84,7 @@ M950 H0 C"out0" T0                                                ; create heate
 M143 H0 P0 T0 C0 S140 A0                                          ; configure heater monitor #0 for heater #0
 M307 H0 R0.182 K0.161:0.000 D4.93 E1.35 S1.00 B0                  ; configure model of heater #0
 M950 H1 C"1.out0" T1                                              ; create heater #1
-M143 H1 P0 T1 C0 S285 A0                                          ; configure heater monitor #0 for heater #1
+M143 H1 P0 T1 C0 S300 A0                                          ; configure heater monitor #0 for heater #1
 ;M307 H1 R4.510 K0.687:0.071 D2.14 E1.35 S1.00 B0 V24.1            ; 40W
 M307 H1 R4.966 K0.585:0.000 D2.61 E1.35 S1.00 B0 V24.0            ; 60W
 

@@ -3,7 +3,10 @@ M98 R1
 
 ; check preconditions
 M98 P"check-filament.g" F{param.F}
-M98 P"revo/check-nozzle.g" S{param.S}
+if exists(param.H) && exists(param.O)
+  M98 P"revo/check-nozzle.g" S{param.S} H{param.H} O{param.O}
+else
+  M98 P"revo/check-nozzle.g" S{param.S}
 
 ; heat up the bed
 M140 S{param.B}

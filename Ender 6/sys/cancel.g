@@ -23,7 +23,7 @@ if abs(move.axes[0].userPosition - 270) < 0.1 && abs(move.axes[1].userPosition -
   G1 X263
 
 ; turn off heaters
-M140 S0
+;M140 S0
 G10 P0 S0 R0
 
 ; turn off fan
