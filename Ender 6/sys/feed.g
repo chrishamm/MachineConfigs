@@ -15,7 +15,9 @@ G1 Y306
 M106 A
 
 ; save PA value and turn off PA
-var pa = move.extruders[0].pressAdv.k0
+var pa = move.extruders[0].pressureAdvance
+if exists(move.extruders[0].pressAdv)
+  set var.pa = move.extruders[0].pressAdv.k0
 M572 D0 S0
 
 ; feed filament to the nozzle until SG detection triggers
