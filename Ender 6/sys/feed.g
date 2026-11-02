@@ -12,8 +12,6 @@ G1 Y270
 G1 X279
 G1 Y306
 
-M106 A
-
 ; save PA value and turn off PA
 var pa = exists(move.extruders[0].pressAdv) ? move.extruders[0].pressAdv.k0 : move.extruders[0].pressureAdvance
 M572 D0 S0
