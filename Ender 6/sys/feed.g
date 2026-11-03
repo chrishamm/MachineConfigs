@@ -6,11 +6,9 @@ if global.filamentType == "TPU"
 var mfmEnabled = sensors.filamentMonitors[0].enableMode
 M591 D0 S0
 
-; go to wastebin but don't cross the brush yet
-G1 X50 Y145 F15000
-G1 Y270
-G1 X279
-G1 Y306
+; go to wastebin via the park position, a direct path can hit the rear beam
+G1 X270 Y300 F15000
+G1 X279 Y306
 
 ; save PA value and turn off PA
 var pa = exists(move.extruders[0].pressAdv) ? move.extruders[0].pressAdv.k0 : move.extruders[0].pressureAdvance
@@ -35,20 +33,7 @@ G4 P500
 M572 D0 S{var.pa}
 G10
 
-; move across the brush and then back diagonally
-while iterations < 3
-  G1 X260 F12000
-  G1 Y290
-  G1 X277 Y306
-  G1 Y300
-
-; move across the brush one last time and then move away from it
-G1 Y295
-G1 X260
-G1 Y300
-G1 Y280
-G1 X252
-G1 X263
+M98 P"wipe.g"
 
 ; enable filament monitor
 if var.mfmEnabled != 0

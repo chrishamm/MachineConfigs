@@ -5,22 +5,9 @@ else
   G1 E-10 F2400     ; retract
   G1 E-40 F6000     ; retract more
 
-; see if we're at the park position
-if abs(move.axes[0].userPosition - 270) < 0.1 && abs(move.axes[1].userPosition - 300) < 0.1 
-  ; move across the brush and then back diagonally
-  while iterations < 3
-    G1 X260 F12000
-    G1 Y290
-    G1 X277 Y306
-    G1 Y300
-
-  ; move across the brush one last time and then move away from it
-  G1 Y295
-  G1 X260
-  G1 Y300
-  G1 Y280
-  G1 X252
-  G1 X263
+; wipe only if we're at the park position
+if abs(move.axes[0].userPosition - 270) < 0.1 && abs(move.axes[1].userPosition - 300) < 0.1
+  M98 P"wipe.g"
 
 ; turn off heaters
 ;M140 S0

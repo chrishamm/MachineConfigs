@@ -13,7 +13,8 @@ G1 Z2 F1200                         ; lift the nozzle off the last layer
 G90
 
 set global.ledJobState = "finished" ; update LEDs
-G1 X270 Y300 F12000                 ; move the head out of the way
+
+M98 P"wipe.g"                       ; wipe the nozzle and move the head out of the way
 
 M291 R"Print Finished" P"Press OK to lower the bed" S3
 G1 Z400                             ; move bed down

@@ -1,0 +1,16 @@
+G1 X270 Y300 F12000 ; approach via the park position, a direct path can hit the rear beam
+
+; move across the brush and then back diagonally
+while iterations < 3
+  G1 X260
+  G1 Y290
+  G1 X277 Y306
+  G1 Y300
+
+; move across the brush one last time and then move away from it
+G1 Y295
+G1 X260
+G1 Y300
+G1 Y280
+G1 X252
+G1 X263
