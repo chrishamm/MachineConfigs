@@ -97,7 +97,7 @@ M308 S4 P"S3.1" Y"dht-humidity" A"Chamber RH[%]"
 
 ; Fans
 M950 F0 C"!1.out3+out3.tach" Q25000                               ; create fan #0
-M106 P0 S0 L0.21 X1 B0 H1 T60:220                                 ; configure fan #0
+M106 P0 S0 L0.21 X1 B0 H1 T45:210                                 ; configure fan #0
 M950 F1 C"1.out6"                                                 ; create fan #1
 M106 P1 S0 L0 X1 B0.1 C"Cooling Fan"                              ; configure fan #1
 
